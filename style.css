@@ -8,56 +8,147 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1a1a2e;
+  background: radial-gradient(circle at 20% 20%, #1f2b52 0%, #0f0f23 55%, #0a0a18 100%);
   color: #eee;
   font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 배경에 은은하게 떠다니는 그라데이션 블롭 */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  z-index: 0;
+  animation: float 12s ease-in-out infinite;
+}
+
+.blob-a {
+  width: 320px;
+  height: 320px;
+  top: -80px;
+  left: -60px;
+  background: #e94560;
+  animation-delay: 0s;
+}
+
+.blob-b {
+  width: 280px;
+  height: 280px;
+  bottom: -60px;
+  right: -40px;
+  background: #2ec4b6;
+  animation-delay: 2s;
+}
+
+.blob-c {
+  width: 240px;
+  height: 240px;
+  bottom: 20%;
+  left: 8%;
+  background: #7b61ff;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -30px) scale(1.08);
+  }
 }
 
 .menu-wrap {
+  position: relative;
+  z-index: 1;
   text-align: center;
   padding: 20px;
 }
 
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #7b8bdb;
+  font-weight: 600;
+}
+
 h1 {
   margin: 0 0 4px;
-  font-size: 28px;
+  font-size: 32px;
+  background: linear-gradient(90deg, #ff6b81, #ffd56b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .subtitle {
-  margin: 0 0 24px;
-  color: #aaa;
+  margin: 0 0 32px;
+  color: #a3a8c3;
   font-size: 14px;
 }
 
 .card-list {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .card {
-  width: 180px;
-  padding: 24px 16px;
-  background: #16213e;
-  border: 2px solid #2ec4b6;
-  border-radius: 10px;
+  --accent: #2ec4b6;
+  width: 190px;
+  padding: 28px 18px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 3px solid var(--accent);
+  border-radius: 14px;
   text-decoration: none;
   color: #eee;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  transition: transform 0.15s, background 0.15s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  animation: fadeInUp 0.5s ease both;
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.15s; }
+.card:nth-child(3) { animation-delay: 0.25s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  background: #1f2b4d;
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 12px 28px -8px var(--accent);
+  border-color: var(--accent);
 }
 
+.card.accent-racing { --accent: #e94560; }
+.card.accent-number { --accent: #4fb0ff; }
+.card.accent-rps { --accent: #a880ff; }
+
 .card .icon {
-  font-size: 40px;
+  font-size: 42px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .icon {
+  transform: scale(1.15) rotate(-4deg);
 }
 
 .card .title {
@@ -67,5 +158,27 @@ h1 {
 
 .card .desc {
   font-size: 12px;
-  color: #aaa;
+  color: #a3a8c3;
+  min-height: 32px;
+}
+
+.card .play {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover .play {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.footer {
+  margin-top: 32px;
+  font-size: 12px;
+  color: #6b7099;
 }
