@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>숫자 맞히기 게임</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="game-wrap">
+    <h1>🔢 숫자 맞히기</h1>
+    <p class="hint">1부터 100 사이의 숫자를 맞혀보세요.</p>
+    <div class="input-row">
+      <input type="text" id="guessInput" placeholder="숫자 입력" autofocus />
+      <button id="guessBtn">확인</button>
+    </div>
+    <p id="message" class="message">숫자를 입력하고 확인을 눌러보세요.</p>
+    <p class="tries">시도 횟수: <b id="tries">0</b></p>
+    <button id="restartBtn" class="hidden">다시 시작</button>
+    <a class="back-link" href="../index.html">← 메인으로</a>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

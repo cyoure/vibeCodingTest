@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>장애물 회피 레이싱 게임</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="game-wrap">
+    <h1>🏎️ 장애물 회피 레이싱</h1>
+    <div class="hud">
+      <span>점수: <b id="score">0</b></span>
+      <span>속도: <b id="speed">0</b></span>
+    </div>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <p class="hint">← → 키(또는 A / D)로 이동하세요. 충돌하면 게임 오버!</p>
+    <a class="back-link" href="../index.html">← 메인으로</a>
+    <div id="overlay" class="overlay hidden">
+      <p id="overlayText">게임 오버</p>
+      <button id="restartBtn">다시 시작 (Space)</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

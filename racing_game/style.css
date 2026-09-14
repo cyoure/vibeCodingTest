@@ -1,0 +1,90 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+  color: #eee;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.game-wrap {
+  text-align: center;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  width: 400px;
+  margin: 0 auto 8px;
+  font-size: 16px;
+}
+
+canvas {
+  background: #555;
+  border: 4px solid #eee;
+  border-radius: 6px;
+  display: block;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #2ec4b6;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay p {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.overlay button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background: #e94560;
+  color: #fff;
+  cursor: pointer;
+}
+
+.overlay button:hover {
+  background: #ff5b7a;
+}

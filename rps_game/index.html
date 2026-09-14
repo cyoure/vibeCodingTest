@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가위바위보 게임</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="game-wrap">
+    <h1>✂️ 가위바위보</h1>
+
+    <div class="score-row">
+      <span>승 <b id="winCount">0</b></span>
+      <span>무 <b id="drawCount">0</b></span>
+      <span>패 <b id="loseCount">0</b></span>
+    </div>
+
+    <div class="battle-row">
+      <div class="battle-box">
+        <span class="label">나</span>
+        <span id="playerHand" class="hand">❔</span>
+      </div>
+      <span class="vs">VS</span>
+      <div class="battle-box">
+        <span class="label">컴퓨터</span>
+        <span id="computerHand" class="hand">❔</span>
+      </div>
+    </div>
+
+    <p id="resultMessage" class="result-message">가위, 바위, 보 중 하나를 선택하세요!</p>
+
+    <div class="choice-row">
+      <button class="choice-btn" data-choice="rock">✊ 바위</button>
+      <button class="choice-btn" data-choice="scissors">✌️ 가위</button>
+      <button class="choice-btn" data-choice="paper">🖐️ 보</button>
+    </div>
+
+    <button id="resetBtn">전적 초기화</button>
+    <a class="back-link" href="../index.html">← 메인으로</a>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
