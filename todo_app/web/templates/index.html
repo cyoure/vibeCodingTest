@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>MiniTask</title>
+  <style>
+    body { font-family: sans-serif; max-width: 960px; margin: 40px auto; padding: 0 16px; }
+    .flash { color: #c00; }
+
+    .add-form { margin-bottom: 24px; }
+
+    .board { display: flex; gap: 16px; align-items: flex-start; }
+    .column {
+      flex: 1;
+      min-width: 0;
+      background: #f4f5f7;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .column h2 { font-size: 16px; margin: 0 0 12px; }
+    .column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      min-height: 40px;
+      border-radius: 6px;
+      transition: background-color 0.15s;
+    }
+    .column ul.drag-over { background-color: #dce6f5; }
+
+    .card {
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      padding: 10px;
+      margin-bottom: 8px;
+      cursor: grab;
+    }
+    .card.dragging { opacity: 0.4; }
+    .card .title { display: block; margin-bottom: 8px; word-break: break-word; }
+    .card .actions { display: flex; gap: 4px; flex-wrap: wrap; }
+    .card form.inline { display: inline; }
+    .card .edit-mode { display: flex; gap: 4px; }
+    .card .edit-mode input[type="text"] { flex: 1; padding: 4px; }
+  </style>
+</head>
+<body>
+  <h1>MiniTask</h1>
+  <p style="color:#888; font-size: 13px;">카드를 드래그해서 다른 컬럼으로 옮길 수 있습니다.</p>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <p class="flash">오류: {{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form class="add-form" action="{{ url_for('add') }}" method="post">
+    <input type="text" name="title" placeholder="새 할 일" required>
+    <button type="submit">추가</button>
+  </form>
+
+  {% macro render_card(todo, action_status, action_label) %}
+    <li id="todo-{{ todo.id }}" class="card" draggable="true" data-id="{{ todo.id }}">
+      <div class="view-mode">
+        <span class="title">[{{ todo.id }}] {{ todo.title }}</span>
+        <div class="actions">
+          {% if action_status %}
+            <form class="inline" action="{{ url_for('move', todo_id=todo.id) }}" method="post">
+              <input type="hidden" name="status" value="{{ action_status }}">
+              <button type="submit">{{ action_label }}</button>
+            </form>
+          {% endif %}
+          <button type="button" onclick="toggleEdit({{ todo.id }})">수정</button>
+          <form class="inline" action="{{ url_for('delete', todo_id=todo.id) }}" method="post">
+            <button type="submit">삭제</button>
+          </form>
+        </div>
+      </div>
+
+      <form class="edit-mode" style="display: none;" action="{{ url_for('edit', todo_id=todo.id) }}" method="post">
+        <input type="text" name="title" value="{{ todo.title }}" required>
+        <button type="submit">저장</button>
+        <button type="button" onclick="toggleEdit({{ todo.id }})">취소</button>
+      </form>
+    </li>
+  {% endmacro %}
+
+  <div class="board">
+    <div class="column">
+      <h2>할 일 ({{ columns.todo|length }})</h2>
+      <ul class="drop-zone" data-status="todo">
+        {% for todo in columns.todo %}
+          {{ render_card(todo, 'in_progress', '시작') }}
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="column">
+      <h2>진행중 ({{ columns.in_progress|length }})</h2>
+      <ul class="drop-zone" data-status="in_progress">
+        {% for todo in columns.in_progress %}
+          {{ render_card(todo, 'done', '완료') }}
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="column">
+      <h2>완료 ({{ columns.done|length }})</h2>
+      <ul class="drop-zone" data-status="done">
+        {% for todo in columns.done %}
+          {{ render_card(todo, None, None) }}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function toggleEdit(id) {
+      const li = document.getElementById('todo-' + id);
+      const view = li.querySelector('.view-mode');
+      const edit = li.querySelector('.edit-mode');
+      const isEditing = edit.style.display !== 'none';
+
+      view.style.display = isEditing ? 'block' : 'none';
+      edit.style.display = isEditing ? 'none' : 'flex';
+
+      if (!isEditing) {
+        const input = edit.querySelector('input[name="title"]');
+        input.focus();
+        input.select();
+      }
+    }
+
+    function moveCard(id, status) {
+      const form = document.createElement('form');
+      form.method = 'post';
+      form.action = '/move/' + id;
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'status';
+      input.value = status;
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+    document.querySelectorAll('.card').forEach(function (card) {
+      card.addEventListener('dragstart', function (e) {
+        e.dataTransfer.setData('text/plain', card.dataset.id);
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', function () {
+        card.classList.remove('dragging');
+      });
+    });
+
+    document.querySelectorAll('.drop-zone').forEach(function (zone) {
+      zone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', function () {
+        zone.classList.remove('drag-over');
+      });
+      zone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const id = e.dataTransfer.getData('text/plain');
+        const status = zone.dataset.status;
+        if (id) {
+          moveCard(id, status);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
